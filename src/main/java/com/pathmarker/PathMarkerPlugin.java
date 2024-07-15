@@ -1039,10 +1039,10 @@ public class PathMarkerPlugin extends Plugin
         switch (event.getGameState())
         {
             case HOPPING:
-            case LOGGED_IN:
+            case LOGGING_IN:
             {
                 activeCheckpointWPs.clear();
-                activeCheckpointWPs.add(new WorldPoint(0,0,client.getLocalPlayer().getWorldView().getPlane()));
+                activeCheckpointWPs.add(new WorldPoint(0,0,0));
                 pathActive = false;
             }
         }
