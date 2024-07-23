@@ -30,7 +30,6 @@ import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
@@ -507,7 +506,7 @@ public class PathMarkerPlugin extends Plugin
 
     private void updateCheckpointTiles()
     {
-        if (lastTickWorldLocation == null)
+        if (lastTickWorldLocation == null || activeCheckpointWPs.isEmpty())
         {
             return;
         }
@@ -1043,7 +1042,7 @@ public class PathMarkerPlugin extends Plugin
             case LOGGING_IN:
             {
                 activeCheckpointWPs.clear();
-                activeCheckpointWPs.add(new WorldPoint(0,0,client.getLocalPlayer().getWorldView().getPlane()));
+                activeCheckpointWPs.add(new WorldPoint(0,0,0));
                 pathActive = false;
             }
         }
@@ -1189,7 +1188,7 @@ public class PathMarkerPlugin extends Plugin
         {
             pathFromCheckpointTiles(hoverCheckpointWPs, willRunOnClick(), hoverMiddlePathTiles, hoverPathTiles, hoverPathFound);
         }
-        if (currentWorldLocation.equals(activeCheckpointWPs.get(activeCheckpointWPs.size() - 1))
+        if ((activeCheckpointWPs.size() > 0 && currentWorldLocation.equals(activeCheckpointWPs.get(activeCheckpointWPs.size() - 1)))
                 || (lastTickWorldLocation != null && currentWorldLocation.distanceTo(lastTickWorldLocation) > 2))
         {
             pathActive = false;

@@ -223,7 +223,10 @@ public class Pathfinder
             {
                 // No path found
                 List<WorldPoint> checkpointWPs = new ArrayList<>();
-                checkpointWPs.add(plugin.getActiveCheckpointWPs().get(0));
+                if (plugin.getActiveCheckpointWPs().size() > 0)
+                {
+                    checkpointWPs.add(plugin.getActiveCheckpointWPs().get(0));
+                }
                 return Pair.of(checkpointWPs,false);
             }
         }
