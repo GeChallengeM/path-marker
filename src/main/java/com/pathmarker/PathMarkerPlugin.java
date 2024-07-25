@@ -102,6 +102,8 @@ public class PathMarkerPlugin extends Plugin
 
     private boolean calcTilePathOnNextClientTick;
 
+    private int hoverPathId;
+
     @Setter
     @Getter
     private boolean keyDisplayActivePath;
@@ -228,6 +230,7 @@ public class PathMarkerPlugin extends Plugin
         MenuEntry[] menuEntries = client.getMenuEntries();
         if (menuEntries.length == 0)
         {
+            hoverPathId = 0;
             return null;
         }
         MenuEntry menuEntry;
@@ -288,6 +291,7 @@ public class PathMarkerPlugin extends Plugin
             case RUNELITE_PLAYER:
             {
                 hoverCheckpointWPs.clear();
+                hoverPathId = 0;
                 return null;
             }
             case GAME_OBJECT_FIRST_OPTION:
@@ -313,6 +317,7 @@ public class PathMarkerPlugin extends Plugin
                 TileItem tileItem = findTileItem(x, y, id);
                 if (tileObject == null && tileItem == null)
                 {
+                    hoverPathId = 0;
                     return null;
                 }
                 if (tileObject != null)
@@ -340,7 +345,14 @@ public class PathMarkerPlugin extends Plugin
                         objConfig = groundObject.getConfig();
                     }
                 }
-                return pathfinder.pathTo(x, y, sizeX, sizeY, objConfig, id);
+                int newHoverPathId = (x + 1) * (y + 1) * (objConfig + 1) * (id + 1);
+                if (hoverPathId != newHoverPathId) {
+                    hoverPathId = newHoverPathId;
+                    return pathfinder.pathTo(x, y, sizeX, sizeY, objConfig, id);
+                } else {
+                    return null;
+                }
+
             }
             case NPC_FIRST_OPTION:
             case NPC_SECOND_OPTION:
@@ -369,7 +381,13 @@ public class PathMarkerPlugin extends Plugin
                 {
                     size = ((NPC) actor).getComposition().getSize();
                 }
-                return pathfinder.pathTo(x, y, size, size, -2, -1);
+                int newHoverPathId = (x + 1) * (y + 1) * -2;
+                if (hoverPathId != newHoverPathId) {
+                    hoverPathId = newHoverPathId;
+                    return pathfinder.pathTo(x, y, size, size, -2, -1);
+                } else {
+                    return null;
+                }
             }
             case WALK:
             default:
@@ -379,7 +397,14 @@ public class PathMarkerPlugin extends Plugin
                 {
                     return null;
                 }
-                return pathfinder.pathTo(client.getLocalPlayer().getWorldView().getSelectedSceneTile());
+                Tile tile = client.getLocalPlayer().getWorldView().getSelectedSceneTile();
+                int newHoverPathId = (tile.getSceneLocation().getX() + 1) * (tile.getSceneLocation().getY() + 1) * (tile.getPlane() + 1);
+                if (hoverPathId != newHoverPathId) {
+                    hoverPathId = newHoverPathId;
+                    return pathfinder.pathTo(client.getLocalPlayer().getWorldView().getSelectedSceneTile());
+                } else {
+                    return null;
+                }
             }
         }
     }
