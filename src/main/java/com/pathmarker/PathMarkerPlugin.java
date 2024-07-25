@@ -102,7 +102,7 @@ public class PathMarkerPlugin extends Plugin
 
     private boolean calcTilePathOnNextClientTick;
 
-    private int hoverPathId;
+    private long hoverPathId;
 
     @Setter
     @Getter
@@ -345,7 +345,13 @@ public class PathMarkerPlugin extends Plugin
                         objConfig = groundObject.getConfig();
                     }
                 }
-                int newHoverPathId = (x + 1) * (y + 1) * (objConfig + 1) * (id + 1);
+                long newHoverPathId = (x & 0xFF) |
+                        ((y & 0xFF) << 8) |
+                        ((sizeX & 0xF) << 16) |
+                        ((sizeY & 0xF) << 20) |
+                        ((long) (objConfig & 0xFFFF) << 24) |
+                        ((long) (id & 0xFFFF) << 40) |
+                        ((long) client.getLocalPlayer().getWorldView().getPlane()) << 56;
                 if (hoverPathId != newHoverPathId) {
                     hoverPathId = newHoverPathId;
                     return pathfinder.pathTo(x, y, sizeX, sizeY, objConfig, id);
@@ -381,7 +387,11 @@ public class PathMarkerPlugin extends Plugin
                 {
                     size = ((NPC) actor).getComposition().getSize();
                 }
-                int newHoverPathId = (x + 1) * (y + 1) * -2;
+                long newHoverPathId = (x & 0xFF) |
+                        ((y & 0xFF) << 8) |
+                        ((size & 0xF) << 16) |
+                        ((size & 0xF) << 20) |
+                        ((long) client.getLocalPlayer().getWorldView().getPlane()) << 56;
                 if (hoverPathId != newHoverPathId) {
                     hoverPathId = newHoverPathId;
                     return pathfinder.pathTo(x, y, size, size, -2, -1);
@@ -398,7 +408,9 @@ public class PathMarkerPlugin extends Plugin
                     return null;
                 }
                 Tile tile = client.getLocalPlayer().getWorldView().getSelectedSceneTile();
-                int newHoverPathId = (tile.getSceneLocation().getX() + 1) * (tile.getSceneLocation().getY() + 1) * (tile.getPlane() + 1);
+                long newHoverPathId = (tile.getSceneLocation().getX() & 0xFF) |
+                        ((tile.getSceneLocation().getY() & 0xFF) << 8) |
+                        ((long) tile.getPlane()) << 56;
                 if (hoverPathId != newHoverPathId) {
                     hoverPathId = newHoverPathId;
                     return pathfinder.pathTo(client.getLocalPlayer().getWorldView().getSelectedSceneTile());
