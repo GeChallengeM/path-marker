@@ -39,9 +39,9 @@ public class Pathfinder
         {
             return null;
         }
-        int z = client.getLocalPlayer().getWorldView().getPlane();
+        int z = player.getWorldView().getPlane();
 
-        CollisionData[] collisionData = client.getLocalPlayer().getWorldView().getCollisionMaps();
+        CollisionData[] collisionData = player.getWorldView().getCollisionMaps();
         if (collisionData == null)
         {
             return null;
@@ -56,7 +56,7 @@ public class Pathfinder
                 distances[i][j] = Integer.MAX_VALUE;
             }
         }
-        LocalPoint playerTrueTileLocalPoint = LocalPoint.fromWorld(client.getLocalPlayer().getWorldView(), player.getWorldLocation());
+        LocalPoint playerTrueTileLocalPoint = LocalPoint.fromWorld(player.getWorldView(), player.getWorldLocation());
         if (playerTrueTileLocalPoint == null)
         {
             return null;
@@ -267,7 +267,7 @@ public class Pathfinder
         }
 
         int checkpointTileNumber = 1;
-        Tile[][][] tiles = client.getLocalPlayer().getWorldView().getScene().getTiles();
+        Tile[][][] tiles = player.getWorldView().getScene().getTiles();
         List<WorldPoint> checkpointWPs = new ArrayList<>();
         while (index-- > 0)
         {
