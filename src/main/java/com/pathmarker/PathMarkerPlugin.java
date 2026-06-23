@@ -767,7 +767,12 @@ public class PathMarkerPlugin extends Plugin
         }
         Scene scene = client.getLocalPlayer().getWorldView().getScene();
         Tile[][][] tiles = scene.getTiles();
-        Tile tile = tiles[client.getLocalPlayer().getWorldView().getPlane()][x][y];
+        int plane = client.getLocalPlayer().getWorldView().getPlane();
+        if (plane < 0 || plane >= tiles.length || x < 0 || x >= tiles[plane].length || y < 0 || y >= tiles[plane][x].length)
+        {
+            return null;
+        }
+        Tile tile = tiles[plane][x][y];
         if (tile == null)
         {
             return null;
@@ -795,7 +800,12 @@ public class PathMarkerPlugin extends Plugin
         }
         Scene scene = client.getLocalPlayer().getWorldView().getScene();
         Tile[][][] tiles = scene.getTiles();
-        Tile tile = tiles[client.getLocalPlayer().getWorldView().getPlane()][x][y];
+        int plane = client.getLocalPlayer().getWorldView().getPlane();
+        if (plane < 0 || plane >= tiles.length || x < 0 || x >= tiles[plane].length || y < 0 || y >= tiles[plane][x].length)
+        {
+            return null;
+        }
+        Tile tile = tiles[plane][x][y];
         if (tile != null)
         {
             for (GameObject gameObject : tile.getGameObjects())
