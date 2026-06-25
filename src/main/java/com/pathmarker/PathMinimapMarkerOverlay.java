@@ -35,6 +35,10 @@ public class PathMinimapMarkerOverlay extends Overlay
     @Override
     public Dimension render(Graphics2D graphics)
     {
+        if (client.getLocalPlayer() == null)
+        {
+            return null;
+        }
         double angle = client.getCameraYawTarget() * 0.0030679615D;
         Widget minimapDrawWidget;
         if (client.isResized())

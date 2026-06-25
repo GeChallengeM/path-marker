@@ -35,6 +35,10 @@ public class PathMarkerOverlay extends Overlay
     @Override
     public Dimension render(Graphics2D graphics)
     {
+        if (client.getLocalPlayer() == null)
+        {
+            return null;
+        }
         if ((config.hoverPathDisplaySetting() != PathMarkerConfig.PathDisplaySetting.NEVER)
                 && (config.activePathDisplaySetting() == PathMarkerConfig.PathDisplaySetting.NEVER || !plugin.isPathActive() || !config.drawOnlyIfNoActivePath())
                 && (plugin.isKeyDisplayHoverPath() || config.hoverPathDisplaySetting() == PathMarkerConfig.PathDisplaySetting.ALWAYS))
