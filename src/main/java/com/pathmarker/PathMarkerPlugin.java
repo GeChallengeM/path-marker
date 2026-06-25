@@ -875,7 +875,7 @@ public class PathMarkerPlugin extends Plugin
             reader.close();
             return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
