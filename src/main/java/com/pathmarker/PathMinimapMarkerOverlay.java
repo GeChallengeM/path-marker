@@ -39,7 +39,7 @@ public class PathMinimapMarkerOverlay extends Overlay
         {
             return null;
         }
-        double angle = client.getCameraYawTarget() * 0.0030679615D;
+        double angle = client.getCameraYawTarget() * 0.000383495196971D;
         Widget minimapDrawWidget;
         if (client.isResized())
         {
