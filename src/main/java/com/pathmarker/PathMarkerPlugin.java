@@ -916,20 +916,22 @@ public class PathMarkerPlugin extends Plugin
         {
             return null;
         }
-        int widgetX = lastMouseCanvasPosition.getX() - minimapDrawWidget.getCanvasLocation().getX() - minimapDrawWidget.getWidth()/2;
-        int widgetY = lastMouseCanvasPosition.getY() - minimapDrawWidget.getCanvasLocation().getY() - minimapDrawWidget.getHeight()/2;
-        int angle = client.getCameraYawTarget() & 0x7FF;
-        int sine = (int) (65536.0D * Math.sin((double) angle * 0.0030679615D));
-        int cosine = (int) (65536.0D * Math.cos((double) angle * 0.0030679615D));
-        int xx = cosine * widgetX + widgetY * sine >> 11;
-        int yy = widgetY * cosine - widgetX * sine >> 11;
-        int deltaX = xx + client.getLocalPlayer().getLocalLocation().getSceneX() >> 7;
-        int deltaY = client.getLocalPlayer().getLocalLocation().getSceneY() - yy >> 7;
         LocalPoint localPoint = client.getLocalPlayer().getLocalLocation();
         if (localPoint == null)
         {
             return null;
         }
+        double minimapZoom = client.getMinimapZoom();
+        int locationSize = (int)Math.round(32.0 * minimapZoom);
+        int widgetX = lastMouseCanvasPosition.getX() - minimapDrawWidget.getCanvasLocation().getX() - minimapDrawWidget.getWidth()/2;
+        int widgetY = lastMouseCanvasPosition.getY() - minimapDrawWidget.getCanvasLocation().getY() - minimapDrawWidget.getHeight()/2;
+        int angle = client.getCameraYawTarget();
+        int sine = (int) (65536.0D * Math.sin((double) angle * 0.000383495196971D));
+        int cosine = (int) (65536.0D * Math.cos((double) angle * 0.000383495196971D));
+        int xx = cosine * widgetX + widgetY * sine >> 11;
+        int yy = widgetY * cosine - widgetX * sine >> 11;
+        int deltaX = xx/locationSize;
+        int deltaY = -(yy/locationSize);
         return new Point(localPoint.getSceneX() + deltaX, localPoint.getSceneY() + deltaY);
     }
 
