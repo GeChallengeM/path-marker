@@ -39,7 +39,7 @@ public class PathMinimapMarkerOverlay extends Overlay
         {
             return null;
         }
-        double angle = client.getCameraYawTarget() * 0.0030679615D;
+        double angle = client.getCameraYawTarget() * 0.000383495196971D;
         Widget minimapDrawWidget;
         if (client.isResized())
         {
@@ -118,6 +118,7 @@ public class PathMinimapMarkerOverlay extends Overlay
 
     private void renderMinimapTile(Graphics2D graphics, WorldPoint worldPoint, Color color, Point miniMapPoint)
     {
+        double minimapTileSize = client.getMinimapZoom();
         LocalPoint lp = LocalPoint.fromWorld(client.getLocalPlayer().getWorldView(), worldPoint);
         if (lp == null)
         {
@@ -128,15 +129,25 @@ public class PathMinimapMarkerOverlay extends Overlay
         {
             return;
         }
-        int x = lp.getX()/32 - localLocation.getX()/32;
-        int y = localLocation.getY()/32 - lp.getY()/32;
-        int squaredDistance = x*x + y*y;
-        if (squaredDistance > 5900)
-        {
+        // Every world tile is 128 units apart
+        double locationSize = 128.0/minimapTileSize;
+        int x = lp.getX() - localLocation.getX();
+        int y = localLocation.getY() - lp.getY();
+        int squareDistance = x*x + y*y;
+        // Roughly measured
+        double tileRadius = 74.0 / minimapTileSize;
+        double maxDistance = tileRadius * 128.0;
+        int maxSquareDistance = (int)(maxDistance * maxDistance);
+        if (squareDistance > maxSquareDistance) {
             return;
         }
-        Point miniMapPoint2 = new Point(x + miniMapPoint.getX(), y + miniMapPoint.getY());
+        int tileStartX = (int)Math.round((x - 64) / locationSize);
+        int tileStartY = (int)Math.round((y - 64) / locationSize);
+        int tileEndX = (int)Math.round((x + 64) / locationSize);
+        int tileEndY = (int)Math.round((y + 64) / locationSize);
+        int tileSizeX = tileEndX - tileStartX;
+        int tileSizeY = tileEndY - tileStartY;
         graphics.setColor(color);
-        graphics.fillRect(miniMapPoint2.getX() - 2, miniMapPoint2.getY() - 2, 4, 4);
+        graphics.fillRect(tileStartX + miniMapPoint.getX(), tileStartY + miniMapPoint.getY(), tileSizeX, tileSizeY);
     }
 }
